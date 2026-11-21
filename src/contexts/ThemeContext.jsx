@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 const ThemeContext = createContext()
 
@@ -11,21 +11,26 @@ export const useTheme = () => {
 }
 
 export const ThemeProvider = ({ children }) => {
-  const theme = 'dark'
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'dark'
+  })
 
   useEffect(() => {
-    // Keep the app permanently in dark mode.
     const root = document.documentElement
-    root.classList.add('dark')
-    localStorage.setItem('theme', 'dark')
-  }, [])
+    if (theme === 'dark') {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+    }
+    localStorage.setItem('theme', theme)
+  }, [theme])
 
   const toggleTheme = () => {
-    return
+    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'))
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   )

@@ -15,10 +15,13 @@ const AnimatedText = ({ text, className = '', delay = 0 }) => {
     const words = el.innerText.split(' ');
     el.innerHTML = '';
     
-    words.forEach(word => {
+    words.forEach((word, index) => {
       const span = document.createElement('span');
-      span.innerText = word + ' ';
+      span.innerText = word;
       span.style.display = 'inline-block';
+      if (index < words.length - 1) {
+        span.style.marginRight = '0.28em';
+      }
       span.style.opacity = '0';
       span.style.transform = 'translateY(20px)';
       el.appendChild(span);
